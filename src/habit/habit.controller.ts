@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common'
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common'
 
 import { CreateHabitDto } from './dto/create-habit.dto'
 import { DateQueryDto } from './dto/date-query.dto'
@@ -14,7 +21,16 @@ export class HabitController {
   }
 
   @Get()
-  async findAll(@Query() query: DateQueryDto) {
-    return query
+  async findAll(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      })
+    )
+    query: DateQueryDto
+  ) {
+    return await this.service.findMany(query.date)
   }
 }

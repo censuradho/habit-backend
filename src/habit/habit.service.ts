@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/database/prisma.service'
 import { CreateHabitDto } from './dto/create-habit.dto'
-import { startOfDay } from 'date-fns'
+import { getDay, startOfDay } from 'date-fns'
 
 @Injectable()
 export class HabitService {
@@ -21,5 +21,41 @@ export class HabitService {
         },
       },
     })
+  }
+
+  async findMany(date: string) {
+    const parsedDay = startOfDay(new Date(date))
+    const week_day = getDay(parsedDay)
+
+    const possiblesHabits = await this.prisma.habit.findMany({
+      where: {
+        created_at: {
+          lte: new Date(date),
+        },
+        week_day: {
+          some: {
+            week_day,
+          },
+        },
+      },
+    })
+
+    const day = await this.prisma.day.findUnique({
+      where: {
+        date: new Date(parsedDay),
+      },
+      include: {
+        day_habits: true,
+      },
+    })
+
+    const completedHabits = day?.day_habits?.map(
+      (dayHabit) => dayHabit.habit_id
+    )
+
+    return {
+      possiblesHabits,
+      completed_habits: completedHabits || [],
+    }
   }
 }
