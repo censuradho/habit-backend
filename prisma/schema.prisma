@@ -10,7 +10,7 @@ datasource db {
 model Habit {
   id String @id() @default(uuid())
   title String
-  created_at DateTime
+  created_at DateTime @default(now())
 
   day_habits DayHabit[]
   week_day HabitWeekDay[]

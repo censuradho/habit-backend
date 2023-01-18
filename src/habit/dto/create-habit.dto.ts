@@ -5,5 +5,5 @@ export class CreateHabitDto {
   title: string
 
   @IsNumber({}, { each: true })
-  week_day: number
+  week_day: number[]
 }
