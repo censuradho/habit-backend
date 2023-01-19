@@ -25,7 +25,7 @@ export class HabitService {
     })
   }
 
-  async findMany(date: string) {
+  async findByDate(date: string) {
     const parsedDay = startOfDay(new Date(date))
     const week_day = getDay(parsedDay)
 

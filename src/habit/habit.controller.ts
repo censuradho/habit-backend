@@ -23,7 +23,7 @@ export class HabitController {
   }
 
   @Get()
-  async findAll(
+  async findByDate(
     @Query(
       new ValidationPipe({
         transform: true,
@@ -33,7 +33,7 @@ export class HabitController {
     )
     query: DateQueryDto
   ) {
-    return await this.service.findMany(query.date)
+    return await this.service.findByDate(query.date)
   }
 
   @Patch(':id/toggle')
