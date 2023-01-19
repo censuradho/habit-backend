@@ -5,6 +5,8 @@ import {
   Get,
   Query,
   ValidationPipe,
+  Param,
+  Patch,
 } from '@nestjs/common'
 
 import { CreateHabitDto } from './dto/create-habit.dto'
@@ -32,5 +34,10 @@ export class HabitController {
     query: DateQueryDto
   ) {
     return await this.service.findMany(query.date)
+  }
+
+  @Patch(':id/toggle')
+  async toggle(@Param('id') id: string) {
+    await this.service.toggleHabit(id)
   }
 }

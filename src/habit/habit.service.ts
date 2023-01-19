@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/database/prisma.service'
 import { CreateHabitDto } from './dto/create-habit.dto'
 import { getDay, startOfDay } from 'date-fns'
+import { UpdateHabitDto } from './dto/update-habit.dto'
+import { Day } from '@prisma/client'
 
 @Injectable()
 export class HabitService {
@@ -57,5 +59,55 @@ export class HabitService {
       possiblesHabits,
       completed_habits: completedHabits || [],
     }
+  }
+
+  async toggleHabit(id: string) {
+    const today = startOfDay(new Date())
+
+    const toggleHabit = async (day: Day, habit_id: string) => {
+      const dayHabit = await this.prisma.dayHabit.findUnique({
+        where: {
+          day_id_habit_id: {
+            day_id: day.id,
+            habit_id,
+          },
+        },
+      })
+      if (dayHabit) {
+        await this.prisma.dayHabit.delete({
+          where: {
+            id: dayHabit.id,
+          },
+        })
+        return
+      }
+
+      await this.prisma.dayHabit.create({
+        data: {
+          day_id: day.id,
+          habit_id,
+        },
+      })
+
+      return
+    }
+
+    const alreadyRegisterDay = await this.prisma.day.findUnique({
+      where: {
+        date: today,
+      },
+    })
+
+    if (!alreadyRegisterDay) {
+      const savedDay = await this.prisma.day.create({
+        data: {
+          date: today,
+        },
+      })
+
+      return await toggleHabit(savedDay, id)
+    }
+
+    await toggleHabit(alreadyRegisterDay, id)
   }
 }
