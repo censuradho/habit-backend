@@ -24,7 +24,7 @@ async function run() {
         id: firstHabitId,
         title: 'Beber 2L água',
         created_at: firstHabitCreationDate,
-        week_day: {
+        week_days: {
           create: [{ week_day: 1 }, { week_day: 2 }, { week_day: 3 }],
         },
       },
@@ -35,7 +35,7 @@ async function run() {
         id: secondHabitId,
         title: 'Exercitar',
         created_at: secondHabitCreationDate,
-        week_day: {
+        week_days: {
           create: [{ week_day: 3 }, { week_day: 4 }, { week_day: 5 }],
         },
       },
@@ -46,7 +46,7 @@ async function run() {
         id: thirdHabitId,
         title: 'Dormir 8h',
         created_at: thirdHabitCreationDate,
-        week_day: {
+        week_days: {
           create: [
             { week_day: 1 },
             { week_day: 2 },

@@ -13,7 +13,7 @@ model Habit {
   created_at DateTime @default(now())
 
   day_habits DayHabit[]
-  week_day HabitWeekDay[]
+  week_days HabitWeekDay[]
 
   @@map("habits")
 }
@@ -39,7 +39,7 @@ model DayHabit {
   habit Habit @relation(fields: [habit_id], references: [id], onDelete: Cascade)
 
   @@unique([day_id, habit_id])
-  @@map("day_habit")
+  @@map("day_habits")
 }
 
 model HabitWeekDay {

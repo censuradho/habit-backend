@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/database/prisma.service'
 import { CreateHabitDto } from './dto/create-habit.dto'
 import { getDay, startOfDay } from 'date-fns'
-import { UpdateHabitDto } from './dto/update-habit.dto'
 import { Day } from '@prisma/client'
 
 @Injectable()
@@ -16,7 +15,7 @@ export class HabitService {
       data: {
         title,
         created_at: startOfDay(new Date()).toISOString(),
-        week_day: {
+        week_days: {
           create: week_day.map((week_day) => ({
             week_day,
           })),
@@ -34,7 +33,7 @@ export class HabitService {
         created_at: {
           lte: new Date(date),
         },
-        week_day: {
+        week_days: {
           some: {
             week_day,
           },
@@ -56,7 +55,7 @@ export class HabitService {
     )
 
     return {
-      possiblesHabits,
+      possibles_habits: possiblesHabits || [],
       completed_habits: completedHabits || [],
     }
   }
